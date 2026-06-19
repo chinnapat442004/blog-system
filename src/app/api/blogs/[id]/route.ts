@@ -17,6 +17,9 @@ export async function GET(request: Request, { params }: Params) {
       where: {
         id: Number(id),
       },
+      include: {
+        images: true,
+      },
     });
 
     if (!blog) {
@@ -50,7 +53,7 @@ export async function PATCH(request: Request, { params }: Params) {
 
     const formData = await request.formData();
 
-    const file = formData.get('file') as File | null;
+    const file = formData.get('cover_image') as File | null;
     const title = formData.get('title') as string;
     const content = formData.get('content') as string;
     const excerpt = formData.get('excerpt') as string;
