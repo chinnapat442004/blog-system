@@ -3,5 +3,6 @@
         "*.dbclient-js": "javascript",
         ".fantomasignore": "ignore",
         "plyconfig.json": "jsonc"
-    }
+    },
+    "prisma.pinToPrisma6": true
 }

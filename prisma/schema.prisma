@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Blog {
+  id           Int       @id @default(autoincrement())
+  title        String
+  cover_image  String
+  excerpt      String
+  content      String
+  view_count   Int       @default(0)
+  slug         String    @unique
+  is_published Boolean   @default(false)
+  published_at DateTime?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  comments     Comment[]
+  image        Image[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  email    String @unique
+  username String
+  password String
+}
+
+model Comment {
+  id         Int           @id @default(autoincrement())
+  senderName String
+  message    String        @db.Text
+  status     CommentStatus
+  createdAt  DateTime      @default(now())
+  blogId     Int
+  blog       Blog          @relation(fields: [blogId], references: [id])
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String
+  createdAt DateTime @default(now())
+  blogId    Int
+  blog      Blog     @relation(fields: [blogId], references: [id])
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
