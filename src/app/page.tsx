@@ -7,6 +7,7 @@ import { Blog, Pagination } from '@/types/blog';
 import { Eye, Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function Page() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -70,44 +71,47 @@ export default function Page() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {blogs.map((blog) => (
-            <Card
-              key={blog.id}
-              className="overflow-hidden cursor-pointer transition duration-200 hover:shadow-md hover:-translate-y-1 "
-              onClick={() => {}}
-            >
-              <img
-                src={blog.cover_image}
-                alt={blog.title}
-                className="h-40 w-full object-cover  "
-              />
+            <Link key={blog.id} href={`/blogs/${blog.slug}`}>
+              <Card
+                key={blog.id}
+                className="overflow-hidden cursor-pointer transition duration-200 hover:shadow-md hover:-translate-y-1 "
+              >
+                <img
+                  src={blog.cover_image}
+                  alt={blog.title}
+                  className="h-40 w-full object-cover  "
+                />
 
-              <div className="p-4 space-y-2">
-                <h2 className="font-bold text-lg line-clamp-1">{blog.title}</h2>
+                <div className="p-4 space-y-2">
+                  <h2 className="font-bold text-lg line-clamp-1">
+                    {blog.title}
+                  </h2>
 
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {blog.excerpt}
-                </p>
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {blog.excerpt}
+                  </p>
 
-                <div className="flex justify-between items-center pt-2">
-                  <span className="text-xs text-gray-500">
-                    {blog.published_at
-                      ? new Date(blog.published_at).toLocaleDateString(
-                          'th-TH',
-                          {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          },
-                        )
-                      : '-'}
-                  </span>
-                  <span className="text-xs text-gray-500 flex items-center gap-1">
-                    <Eye className="w-3.5 h-3.5" />
-                    {blog.view_count}
-                  </span>
+                  <div className="flex justify-between items-center pt-2">
+                    <span className="text-xs text-gray-500">
+                      {blog.published_at
+                        ? new Date(blog.published_at).toLocaleDateString(
+                            'th-TH',
+                            {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            },
+                          )
+                        : '-'}
+                    </span>
+                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <Eye className="w-3.5 h-3.5" />
+                      {blog.view_count}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Card>
+              </Card>{' '}
+            </Link>
           ))}
         </div>
 

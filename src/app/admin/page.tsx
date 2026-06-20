@@ -14,7 +14,7 @@ import axios from 'axios';
 import { Blog, Pagination } from '@/types/blog';
 
 import { Switch } from '@/components/ui/switch';
-import { Edit, Search, Trash2 } from 'lucide-react';
+import { Edit, Search, Trash2, Plus } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -57,7 +57,19 @@ export default function AdminDashboard() {
 
   return (
     <>
-      <PageHeader title="จัดการ Blog" />
+      <PageHeader title="จัดการ Blog">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setSearch(inputValue);
+            setPage(1);
+          }}
+          className="gap-2 bg-[#1E293B] text-white hover:bg-[#0f172a] hover:text-white transition"
+        >
+          <Plus className="h-4 w-4" />
+          สร้างบทความใหม่
+        </Button>
+      </PageHeader>
 
       <main className="p-4">
         <div className="w-full ">

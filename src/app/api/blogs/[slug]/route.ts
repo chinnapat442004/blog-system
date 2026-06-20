@@ -4,17 +4,17 @@ const prisma = new PrismaClient();
 
 interface Params {
   params: Promise<{
-    id: string;
+    slug: string;
   }>;
 }
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const { id } = await params;
+    const { slug } = await params;
 
     const blog = await prisma.blog.findUnique({
       where: {
-        id: Number(id),
+        slug: slug,
       },
       include: {
         images: true,

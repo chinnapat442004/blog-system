@@ -23,3 +23,14 @@ export type BlogListResponse = {
   data: Blog[];
   pagination: Pagination;
 };
+
+export type BlogImage = {
+  id: number;
+  imageUrl: string;
+  createdAt: string;
+  blogId: number;
+};
+
+export type BlogDetail = Blog & {
+  images: BlogImage[];
+};
