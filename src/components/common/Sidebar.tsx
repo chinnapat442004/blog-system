@@ -1,15 +1,15 @@
-import { auth, signOut } from '@/app/auth';
+import { auth } from '@/app/auth';
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { LogOut, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { SidebarLinks } from './SidebarLinks';
+import { LogoutButton } from './LogoutButton';
 
 export const AppSidebar = async () => {
   const session = await auth();
@@ -39,20 +39,7 @@ export const AppSidebar = async () => {
         </div>
         <SidebarMenu>
           <SidebarMenuItem>
-            <form
-              action={async () => {
-                'use server';
-                await signOut({ redirectTo: '/login' });
-              }}
-            >
-              <SidebarMenuButton
-                type="submit"
-                className="w-full cursor-pointer   "
-              >
-                <LogOut />
-                <span>Logout</span>
-              </SidebarMenuButton>
-            </form>
+            <LogoutButton />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
