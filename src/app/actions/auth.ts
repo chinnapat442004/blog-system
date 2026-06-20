@@ -1,6 +1,6 @@
 'use server';
 
-import { signIn } from '@/src/app/auth';
+import { signIn } from '@/app/auth';
 import { AuthError } from 'next-auth';
 
 // จะถูกเรียกใช้งานจากฟอร์มหน้า Login
