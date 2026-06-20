@@ -2,20 +2,20 @@
 
 import { useActionState, useState } from 'react';
 import { authenticate } from '@/src/app/actions/auth';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/src/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@/src/components/ui/card';
+import { Input } from '@/src/components/ui/input';
+import { Label } from '@/src/components/ui/label';
 import {
   ToastNotification,
   useToastNotification,
-} from '@/components/ui/toast-notification';
+} from '@/src/components/ui/toast-notification';
 
 export default function LoginPage() {
   const [errorMessage, dispatch, isPending] = useActionState(

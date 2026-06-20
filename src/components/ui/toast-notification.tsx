@@ -1,8 +1,14 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CircleCheckIcon, CircleAlertIcon, InfoIcon, TriangleAlertIcon, XIcon } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/src/components/ui/alert';
+import {
+  CircleCheckIcon,
+  CircleAlertIcon,
+  InfoIcon,
+  TriangleAlertIcon,
+  XIcon,
+} from 'lucide-react';
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
@@ -62,7 +68,7 @@ export function ToastNotification({
   const style = themeStyles[type];
 
   return (
-    <div 
+    <div
       className="fixed top-6 right-6 z-50 w-full max-w-sm animate-in fade-in slide-in-from-top-5 duration-300 group"
       style={{ '--duration': `${duration}ms` } as React.CSSProperties}
     >
@@ -104,15 +110,22 @@ export function ToastNotification({
         </button>
 
         {/* Visual Timer Progress Bar */}
-        <div className={`absolute bottom-0 left-0 right-0 h-1 w-full overflow-hidden ${style.progressBg}`}>
-          <div className={`h-full rounded-r-full toast-progress-bar ${style.progressBar}`} />
+        <div
+          className={`absolute bottom-0 left-0 right-0 h-1 w-full overflow-hidden ${style.progressBg}`}
+        >
+          <div
+            className={`h-full rounded-r-full toast-progress-bar ${style.progressBar}`}
+          />
         </div>
       </Alert>
     </div>
   );
 }
 
-export function useToastNotification(errorMessage: string | undefined, isPending: boolean) {
+export function useToastNotification(
+  errorMessage: string | undefined,
+  isPending: boolean,
+) {
   const [showError, setShowError] = useState(false);
   const [wasPending, setWasPending] = useState(false);
 
