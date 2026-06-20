@@ -14,7 +14,7 @@ import axios from 'axios';
 import { Blog, Pagination } from '@/types/blog';
 
 import { Switch } from '@/components/ui/switch';
-import { Edit, Trash2 } from 'lucide-react';
+import { Edit, Search, Trash2 } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -22,18 +22,20 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function AdminDashboard() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [pagination, setPagenation] = useState<Pagination>();
-
+  const [inputValue, setInputValue] = useState('');
   const [page, setPage] = useState(1);
+  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const response = await axios.get('/api/blogs', {
-          params: { page },
+        const response = await axios.get('/api/admin/blogs', {
+          params: { page, search },
         });
         setBlogs(response.data.data);
         setPagenation(response.data.pagination);
@@ -43,7 +45,8 @@ export default function AdminDashboard() {
     };
 
     fetchBlogs();
-  }, [page]);
+  }, [page, search]);
+
   const previousPage = () => {
     setPage((p) => Math.max(p - 1, 1));
   };
@@ -60,8 +63,32 @@ export default function AdminDashboard() {
         <div className="w-full ">
           <Card className="w-full max-w-full  p-2 border">
             <CardHeader>
-              <CardTitle className="text-xl font-bold ">
-                รายการทั้งหมด
+              <CardTitle>
+                <div className=" flex items-center justify-between gap-3 my-3">
+                  <div className="text-xl font-bold "> รายการทั้งหมด</div>
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="ค้นหา blog..."
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        className="w-[200px] md:w-[300px] border rounded-md px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-gray-300"
+                      />
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setSearch(inputValue);
+                        setPage(1);
+                      }}
+                      className="gap-2 bg-[#1E293B] text-white hover:bg-[#0f172a] hover:text-white transition"
+                    >
+                      <Search className="h-4 w-4" />
+                      ค้นหา
+                    </Button>
+                  </div>
+                </div>
               </CardTitle>
             </CardHeader>
 
