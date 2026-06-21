@@ -55,6 +55,7 @@ export async function POST(request: Request) {
     const content = formData.get('content') as string;
     const excerpt = formData.get('excerpt') as string;
     const slug = formData.get('slug') as string;
+    const isPublished = formData.get('is_published') === 'true';
 
     if (!(coverImage instanceof File)) {
       return Response.json(
@@ -114,6 +115,7 @@ export async function POST(request: Request) {
         content,
         cover_image: result.secure_url,
         excerpt,
+        is_published: isPublished,
         slug,
         images: {
           create: imageUrls.map((image) => ({

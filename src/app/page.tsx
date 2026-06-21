@@ -8,6 +8,7 @@ import { Eye, Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Page() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -76,11 +77,14 @@ export default function Page() {
                 key={blog.id}
                 className="overflow-hidden cursor-pointer transition duration-200 hover:shadow-md hover:-translate-y-1 "
               >
-                <img
-                  src={blog.cover_image}
-                  alt={blog.title}
-                  className="h-40 w-full object-cover  "
-                />
+                <div className="relative h-40 w-full">
+                  <Image
+                    src={blog.cover_image}
+                    alt={blog.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
 
                 <div className="p-4 space-y-2">
                   <h2 className="font-bold text-lg line-clamp-1">

@@ -1,6 +1,6 @@
-import { Card } from '@/components/ui/card';
 import { prisma } from 'prisma';
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 
 type Props = {
   params: Promise<{
@@ -49,11 +49,14 @@ export default async function BlogDetailPage({ params }: Props) {
           <p className="text-muted-foreground leading-7">{blog?.excerpt}</p>
         </div>
         <div className="overflow-hidden rounded-sm   mb-10 border">
-          <img
-            src={blog?.cover_image}
-            alt={blog?.title}
-            className="w-full max-h-[450px] object-cover "
-          />
+          <div className="relative w-full max-h-[450px] h-[450px]">
+            <Image
+              src={blog?.cover_image}
+              alt={blog?.title}
+              fill
+              className="object-cover"
+            />
+          </div>
         </div>
 
         <div className="prose prose-gray max-w-none whitespace-pre-line">
@@ -75,11 +78,14 @@ export default async function BlogDetailPage({ params }: Props) {
                   key={image.id}
                   className="overflow-hidden rounded-md  p-0 transition hover:shadow-lg border"
                 >
-                  <img
-                    src={image.imageUrl}
-                    alt={blog.title}
-                    className="block h-60 w-full object-cover"
-                  />
+                  <div className="relative h-60 w-full">
+                    <Image
+                      src={image.imageUrl}
+                      alt={blog.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               ))}
             </div>

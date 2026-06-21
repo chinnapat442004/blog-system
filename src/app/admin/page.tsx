@@ -23,13 +23,23 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import Image from 'next/image';
 
-export default function AdminDashboard() {
+export default function Admin() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [pagination, setPagenation] = useState<Pagination>();
   const [inputValue, setInputValue] = useState('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [id, setId] = useState(0);
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -55,24 +65,59 @@ export default function AdminDashboard() {
     setPage((p) => p + 1);
   };
 
+  const handleTogglePublish = async (
+    blogId: number,
+    currentStatus: boolean,
+  ) => {
+    try {
+      const response = await axios.patch(`/api/admin/blogs/${blogId}/publish`, {
+        is_published: !currentStatus,
+      });
+
+      setBlogs((prev) =>
+        prev.map((blog) =>
+          blog.id === blogId
+            ? { ...blog, is_published: response.data.data.is_published }
+            : blog,
+        ),
+      );
+    } catch (error) {
+      console.error('Failed to toggle publish', error);
+    }
+  };
+
+  const deleteBlog = async () => {
+    try {
+      await axios.delete(`/api/admin/blogs/${id}`);
+      setBlogs((prev) => prev.filter((blog) => blog.id !== id));
+      setId(0);
+      setIsDeleteDialogOpen(false);
+    } catch (error) {
+      console.error('Failed to delete', error);
+    }
+  };
+
+  const openDeleteDialog = (id: number) => {
+    setId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
   return (
     <>
       <PageHeader title="จัดการ Blog">
-        <Button
-          variant="outline"
-          onClick={() => {
-            setSearch(inputValue);
-            setPage(1);
-          }}
-          className="gap-2 bg-[#1E293B] text-white hover:bg-[#0f172a] hover:text-white transition"
-        >
-          <Plus className="h-4 w-4" />
-          สร้างบทความใหม่
-        </Button>
+        <Link href="/admin/create">
+          <Button
+            variant="outline"
+            className="gap-2 bg-[#1E293B] text-white transition hover:bg-[#0f172a] hover:text-white"
+          >
+            <Plus className="h-4 w-4" />
+            สร้างบทความใหม่
+          </Button>
+        </Link>
       </PageHeader>
 
-      <main className="p-4">
-        <div className="w-full ">
+      <main className="p-4  h-full bg-[#f8fafc]">
+        <div className="w-full  ">
           <Card className="w-full max-w-full  p-2 border">
             <CardHeader>
               <CardTitle>
@@ -124,10 +169,12 @@ export default function AdminDashboard() {
                     {blogs.map((blog) => (
                       <TableRow className="h-24" key={blog.id}>
                         <TableCell>
-                          <img
+                          <Image
                             src={blog.cover_image}
                             alt={blog.title}
-                            className="h-20 w-20 rounded-md object-cover"
+                            width={80}
+                            height={80}
+                            className="rounded-md object-cover"
                           />
                         </TableCell>
 
@@ -145,7 +192,12 @@ export default function AdminDashboard() {
 
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <Switch checked={blog.is_published} />
+                            <Switch
+                              checked={blog.is_published}
+                              onCheckedChange={() =>
+                                handleTogglePublish(blog.id, blog.is_published)
+                              }
+                            />
                             <span className="text-xs text-muted-foreground">
                               {blog.is_published ? 'Published' : 'Draft'}
                             </span>
@@ -154,11 +206,18 @@ export default function AdminDashboard() {
 
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
-                            <button className="p-1 cursor-pointer hover:text-gray-600 transition">
-                              <Edit className="h-4 w-4" />
-                            </button>
+                            <Link href={`/admin/edit/${blog.id}`}>
+                              <button className="p-1 cursor-pointer hover:text-gray-600 transition">
+                                <Edit className="h-4 w-4" />
+                              </button>
+                            </Link>
 
-                            <button className="p-1 cursor-pointer hover:text-red-600 transition">
+                            <button
+                              onClick={() => {
+                                openDeleteDialog(blog.id);
+                              }}
+                              className="p-1 cursor-pointer hover:text-red-600 transition"
+                            >
                               <Trash2 className="h-4 w-4 text-red-600" />
                             </button>
                           </div>
@@ -197,6 +256,38 @@ export default function AdminDashboard() {
           </Card>
         </div>
       </main>
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-md p-0 ">
+          <DialogHeader className="px-6 py-4 ">
+            <DialogTitle className="text-xl font-semibold ">
+              ยืนยันการลบ
+            </DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground px-6 ">
+            คุณต้องการลบคำถามนี้หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้
+          </p>
+          <div className="flex flex-col-reverse gap-2 px-6 py-4 sm:flex-row sm:justify-end">
+            <Button
+              className="w-full sm:w-18"
+              variant="outline"
+              onClick={() => {
+                setIsDeleteDialogOpen(false);
+                setId(0);
+              }}
+            >
+              ยกเลิก
+            </Button>
+            <Button
+              className="w-full sm:w-18 bg-red-400 text-white hover:bg-red-500 transition-colors"
+              variant="default"
+              onClick={deleteBlog}
+            >
+              ลบ
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

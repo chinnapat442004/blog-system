@@ -10,15 +10,26 @@ import {
 
 import { FileText, LucideIcon, MessageSquareText } from 'lucide-react';
 
-interface ProjectItem {
+interface MenuItem {
   name: string;
   href: string;
+  activePaths?: string[];
   icon: LucideIcon;
 }
 
-const projects: ProjectItem[] = [
-  { name: 'Posts', href: '/admin', icon: FileText },
-  { name: 'Comments', href: '/admin/comment', icon: MessageSquareText },
+const projects: MenuItem[] = [
+  {
+    name: 'Posts',
+    href: '/admin',
+    activePaths: ['/admin', '/admin/create', '/admin/edit'],
+    icon: FileText,
+  },
+  {
+    name: 'Comments',
+    href: '/admin/comment',
+    activePaths: ['/admin/comment'],
+    icon: MessageSquareText,
+  },
 ];
 
 export function SidebarLinks() {
@@ -27,7 +38,18 @@ export function SidebarLinks() {
   return (
     <SidebarMenu className="px-5">
       {projects.map((project) => {
-        const isActive = pathname === project.href;
+        const isActive = project.activePaths
+          ? project.activePaths.some((path) => {
+              if (path === '/admin') {
+                return (
+                  pathname === '/admin' ||
+                  pathname.startsWith('/admin/create') ||
+                  pathname.startsWith('/admin/edit')
+                );
+              }
+              return pathname.startsWith(path);
+            })
+          : pathname === project.href;
         const Icon = project.icon;
 
         return (
