@@ -14,7 +14,14 @@ import axios from 'axios';
 import { Blog, Pagination } from '@/types/blog';
 
 import { Switch } from '@/components/ui/switch';
-import { Edit, Search, Trash2, Plus } from 'lucide-react';
+import {
+  Edit,
+  Search,
+  Trash2,
+  Plus,
+  ChevronRight,
+  ChevronLeft,
+} from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -251,21 +258,23 @@ export default function Admin() {
                 <button
                   onClick={previousPage}
                   disabled={page === 1}
-                  className="px-3 py-1 text-sm border rounded-md disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
+                  <ChevronLeft className="h-4 w-4" />
                   Previous
                 </button>
 
-                <div className="text-sm">
+                <div className="text-sm font-medium">
                   {pagination?.page} / {pagination?.totalPages}
                 </div>
 
                 <button
                   onClick={nextPage}
                   disabled={page === pagination?.totalPages}
-                  className="px-3 py-1 text-sm border rounded-md disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   Next
+                  <ChevronRight className="h-4 w-4" />
                 </button>
               </div>
             </CardFooter>

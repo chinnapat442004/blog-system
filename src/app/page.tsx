@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Blog, Pagination } from '@/types/blog';
 
-import { Eye, LogIn, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Eye, LogIn, Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -145,8 +145,9 @@ export default function Page() {
           <button
             onClick={previousPage}
             disabled={page === 1}
-            className="px-3 py-1 text-sm border rounded-md disabled:opacity-50"
+            className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md disabled:opacity-50"
           >
+            <ChevronLeft className="h-4 w-4" />
             Previous
           </button>
 
@@ -157,9 +158,10 @@ export default function Page() {
           <button
             onClick={nextPage}
             disabled={page === pagination?.totalPages}
-            className="px-3 py-1 text-sm border rounded-md disabled:opacity-50"
+            className="flex items-center gap-1 px-3 py-1 text-sm border rounded-md disabled:opacity-50"
           >
             Next
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       </main>

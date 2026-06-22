@@ -48,7 +48,7 @@ export default async function Admin() {
             </CardHeader>
 
             <CardContent className="p-0">
-              <div className="w-full  overflow-x ">
+              <div className="h-[600px] overflow-y-auto overflow-x-auto">
                 <Table className="min-w-[900px] ">
                   <TableHeader>
                     <TableRow>

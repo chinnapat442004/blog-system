@@ -50,10 +50,7 @@ export default function AdminEdit() {
 
   const coverInputRef = useRef<HTMLInputElement>(null);
   const [images, setImages] = useState<
-    (
-      | { id: number; preview: string }
-      | { file: File; preview: string }
-    )[]
+    ({ id: number; preview: string } | { file: File; preview: string })[]
   >([]);
 
   useEffect(() => {

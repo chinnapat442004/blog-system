@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { createComment } from './actions';
+import { Spinner } from '@/components/ui/spinner';
 
 type Props = {
   blogId: number;
@@ -14,6 +15,7 @@ export default function CommentForm({ blogId, slug }: Props) {
   const [senderName, setSenderName] = useState('');
   const [message, setMessage] = useState('');
   const [validationError, setValidationError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateForm = () => {
     if (!senderName || !senderName.trim()) {
@@ -40,11 +42,13 @@ export default function CommentForm({ blogId, slug }: Props) {
     }
 
     setValidationError(null);
+    setIsSubmitting(true);
 
     setTimeout(() => {
       formRef.current?.reset();
       setSenderName('');
       setMessage('');
+      setIsSubmitting(false);
     }, 0);
   };
 
@@ -95,11 +99,25 @@ export default function CommentForm({ blogId, slug }: Props) {
 
         <button
           type="submit"
-          className="w-full rounded-md bg-[#1E293B] px-4 py-2 text-white hover:bg-gray-800 transition"
+          disabled={isSubmitting}
+          className="w-full rounded-md bg-[#1E293B] px-4 py-2 text-white hover:bg-gray-800 transition disabled:cursor-not-allowed disabled:opacity-60"
         >
-          ส่งความคิดเห็น
+          {isSubmitting ? (
+            <span className="inline-flex items-center justify-center gap-2">
+              <Spinner className="size-4" />
+              กำลังส่ง...
+            </span>
+          ) : (
+            'ส่งความคิดเห็น'
+          )}
         </button>
       </form>
+
+      {isSubmitting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <Spinner className="size-12 text-[#1E293B]" />
+        </div>
+      )}
     </>
   );
 }
