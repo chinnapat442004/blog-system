@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Blog, Pagination } from '@/types/blog';
 
-import { Eye, Search } from 'lucide-react';
+import { Eye, LogIn, Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -49,7 +49,15 @@ export default function Page() {
     <>
       <main className="p-4 ">
         <div className="p-5 flex items-center justify-between gap-3 my-3">
-          <h1 className="text-xl font-semibold">Blog</h1>
+          <Button
+            asChild
+            className="bg-[#1E293B] hover:bg-[#0f172a] text-white rounded-sm shadow-sm transition-all duration-200 hover:shadow-md"
+          >
+            <Link href="/login" className="flex items-center gap-2">
+              <LogIn className="h-4 w-4" />
+              Admin Login
+            </Link>
+          </Button>
 
           <div className="flex items-center gap-3">
             <div className="relative">

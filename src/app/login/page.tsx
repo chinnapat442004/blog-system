@@ -38,6 +38,14 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
+          <div className="mb-5 rounded-sm bg-slate-100 p-3 text-xs text-slate-600 border border-slate-200 space-y-1">
+            <p className="font-semibold text-slate-800 flex items-center gap-1">
+              บัญชีสำหรับทดสอบระบบ
+            </p>
+            <p>อีเมล: admin@mail.com</p>
+            <p>รหัสผ่าน: Pass@1234</p>
+          </div>
+
           <form action={dispatch}>
             <div className="flex flex-col gap-5">
               <div className="grid gap-2">
