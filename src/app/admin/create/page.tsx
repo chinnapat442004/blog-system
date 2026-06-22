@@ -2,6 +2,7 @@
 
 import { PageHeader } from '@/components/common/PageHeader';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -21,6 +22,14 @@ export default function AdminCreate() {
   const [slug, setSlug] = useState('');
   const [excerpt, setExcerpt] = useState('');
   const [content, setContent] = useState('');
+  const [errors, setErrors] = useState<{
+    title?: string;
+    slug?: string;
+    excerpt?: string;
+    content?: string;
+    coverImage?: string;
+    general?: string;
+  }>({});
 
   const [coverImage, setCoverImage] = useState<{
     file: File;
@@ -35,6 +44,44 @@ export default function AdminCreate() {
     }[]
   >([]);
   const galleryInputRef = useRef<HTMLInputElement>(null);
+
+  const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+  const validateForm = () => {
+    const validationErrors: {
+      title?: string;
+      slug?: string;
+      excerpt?: string;
+      content?: string;
+      coverImage?: string;
+      general?: string;
+    } = {};
+
+    if (!title.trim()) {
+      validationErrors.title = 'กรุณากรอกชื่อบทความ';
+    }
+
+    if (!slug.trim()) {
+      validationErrors.slug = 'กรุณากรอก URL Slug';
+    } else if (!slugRegex.test(slug)) {
+      validationErrors.slug =
+        'URL Slug ต้องเป็นตัวอักษรภาษาอังกฤษ ตัวเลข และขีดกลางเท่านั้น';
+    }
+
+    if (!excerpt.trim()) {
+      validationErrors.excerpt = 'กรุณากรอกคำอธิบายสั้น ๆ';
+    }
+
+    if (!content.trim()) {
+      validationErrors.content = 'กรุณากรอกเนื้อหาบทความ';
+    }
+
+    if (!coverImage) {
+      validationErrors.coverImage = 'กรุณาใส่รูปปก';
+    }
+
+    return validationErrors;
+  };
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -62,6 +109,11 @@ export default function AdminCreate() {
       file,
       preview: URL.createObjectURL(file),
     });
+    setErrors((prev) => ({
+      ...prev,
+      coverImage: undefined,
+      general: undefined,
+    }));
 
     e.target.value = '';
   };
@@ -71,8 +123,16 @@ export default function AdminCreate() {
   };
 
   const handleSubmit = async (isPublished: boolean) => {
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     try {
       setLoading(true);
+      setErrors({});
 
       const formData = new FormData();
 
@@ -98,14 +158,19 @@ export default function AdminCreate() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message);
+        const slugError =
+          data?.message?.includes('URL Slug') || data?.message?.includes('slug')
+            ? { slug: data?.message }
+            : { general: data?.message || 'เกิดข้อผิดพลาดในการสร้างบทความ' };
+        setErrors(slugError);
+        return;
       }
 
       clearFormData();
-
       router.push('/admin');
     } catch (error) {
       console.error(error);
+      setErrors({ general: 'เกิดข้อผิดพลาดในการสร้างบทความ' });
     } finally {
       setLoading(false);
     }
@@ -146,6 +211,15 @@ export default function AdminCreate() {
         </div>
       </PageHeader>
 
+      {errors.general && (
+        <div className="mx-auto max-w-7xl p-6">
+          <Alert variant="destructive">
+            <AlertTitle>เกิดข้อผิดพลาด</AlertTitle>
+            <AlertDescription>{errors.general}</AlertDescription>
+          </Alert>
+        </div>
+      )}
+
       <main className="p-6 bg-[#f8fafc]">
         <div className="mx-auto max-w-7xl">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -156,9 +230,19 @@ export default function AdminCreate() {
                     <Label>ชื่อบทความ</Label>
                     <Input
                       value={title}
-                      onChange={(e) => setTitle(e.target.value)}
+                      onChange={(e) => {
+                        setTitle(e.target.value);
+                        setErrors((prev) => ({
+                          ...prev,
+                          title: undefined,
+                          general: undefined,
+                        }));
+                      }}
                       placeholder="กรอกชื่อบทความ"
                     />
+                    {errors.title && (
+                      <p className="text-sm text-destructive">{errors.title}</p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
@@ -166,9 +250,19 @@ export default function AdminCreate() {
 
                     <Input
                       value={slug}
-                      onChange={(e) => setSlug(e.target.value)}
+                      onChange={(e) => {
+                        setSlug(e.target.value.toLowerCase());
+                        setErrors((prev) => ({
+                          ...prev,
+                          slug: undefined,
+                          general: undefined,
+                        }));
+                      }}
                       placeholder="my-first-blog"
                     />
+                    {errors.slug && (
+                      <p className="text-sm text-destructive">{errors.slug}</p>
+                    )}
 
                     <p className="text-xs text-muted-foreground">
                       URL :
@@ -184,18 +278,42 @@ export default function AdminCreate() {
                       rows={3}
                       placeholder="กรอกคำอธิบายสั้น ๆ"
                       value={excerpt}
-                      onChange={(e) => setExcerpt(e.target.value)}
+                      onChange={(e) => {
+                        setExcerpt(e.target.value);
+                        setErrors((prev) => ({
+                          ...prev,
+                          excerpt: undefined,
+                          general: undefined,
+                        }));
+                      }}
                     />
+                    {errors.excerpt && (
+                      <p className="text-sm text-destructive">
+                        {errors.excerpt}
+                      </p>
+                    )}
                   </div>
 
                   <div className="space-y-2">
                     <Label>เนื้อหาบทความ</Label>
                     <Textarea
-                      className="min-h-[500px] "
+                      className="min-h-125"
                       placeholder="กรอกเนื้อหาบทความ"
                       value={content}
-                      onChange={(e) => setContent(e.target.value)}
+                      onChange={(e) => {
+                        setContent(e.target.value);
+                        setErrors((prev) => ({
+                          ...prev,
+                          content: undefined,
+                          general: undefined,
+                        }));
+                      }}
                     />
+                    {errors.content && (
+                      <p className="text-sm text-destructive">
+                        {errors.content}
+                      </p>
+                    )}
                   </div>
                 </CardContent>
               </Card>
@@ -245,6 +363,11 @@ export default function AdminCreate() {
                     className="hidden"
                     onChange={handleCoverChange}
                   />
+                  {errors.coverImage && (
+                    <p className="mt-2 text-sm text-destructive">
+                      {errors.coverImage}
+                    </p>
+                  )}
                 </CardContent>
               </Card>
 

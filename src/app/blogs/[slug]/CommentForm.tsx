@@ -95,7 +95,7 @@ export default function CommentForm({ blogId, slug }: Props) {
 
         <button
           type="submit"
-          className="w-full rounded-md bg-black px-4 py-2 text-white hover:bg-gray-800 transition"
+          className="w-full rounded-md bg-[#1E293B] px-4 py-2 text-white hover:bg-gray-800 transition"
         >
           ส่งความคิดเห็น
         </button>

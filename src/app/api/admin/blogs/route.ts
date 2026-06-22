@@ -57,6 +57,36 @@ export async function POST(request: Request) {
     const slug = formData.get('slug') as string;
     const isPublished = formData.get('is_published') === 'true';
 
+    const slugValue = slug?.trim().toLowerCase();
+    const slugRegex = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+    if (!slugValue) {
+      return Response.json({ message: 'กรุณากรอก URL Slug' }, { status: 400 });
+    }
+
+    if (!slugRegex.test(slugValue)) {
+      return Response.json(
+        {
+          message:
+            'URL Slug ต้องเป็นตัวอักษรภาษาอังกฤษ ตัวเลข และขีดกลางเท่านั้น',
+        },
+        { status: 400 },
+      );
+    }
+
+    const existingSlug = await prisma.blog.findUnique({
+      where: {
+        slug: slugValue,
+      },
+    });
+
+    if (existingSlug) {
+      return Response.json(
+        { message: 'URL Slug นี้มีอยู่แล้ว กรุณาเปลี่ยนเป็นค่าอื่น' },
+        { status: 409 },
+      );
+    }
+
     if (!(coverImage instanceof File)) {
       return Response.json(
         { message: 'Cover image not found' },
@@ -116,7 +146,8 @@ export async function POST(request: Request) {
         cover_image: result.secure_url,
         excerpt,
         is_published: isPublished,
-        slug,
+        published_at: isPublished ? new Date() : null,
+        slug: slugValue,
         images: {
           create: imageUrls.map((image) => ({
             imageUrl: image,

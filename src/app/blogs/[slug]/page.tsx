@@ -57,6 +57,12 @@ export default async function BlogDetailPage({ params }: Props) {
                     month: 'long',
                     day: 'numeric',
                   })
+                : blog?.created_at
+                ? new Date(blog.created_at).toLocaleDateString('th-TH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
                 : '-'}
             </span>
 

@@ -8,9 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
-import { Search } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 
 import CommentAction from './CommentAction';
 
@@ -45,28 +43,6 @@ export default async function Admin() {
               <CardTitle>
                 <div className=" flex items-center justify-between gap-3 my-3">
                   <div className="text-xl font-bold "> รายการทั้งหมด</div>
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="ค้นหา blog..."
-                        // value={inputValue}
-                        // onChange={(e) => setInputValue(e.target.value)}
-                        className="w-[200px] md:w-[300px] border rounded-md px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-gray-300"
-                      />
-                    </div>
-                    <Button
-                      variant="outline"
-                      // onClick={() => {
-                      //   setSearch(inputValue);
-                      //   setPage(1);
-                      // }}
-                      className="gap-2 bg-[#1E293B] text-white hover:bg-[#0f172a] hover:text-white transition"
-                    >
-                      <Search className="h-4 w-4" />
-                      ค้นหา
-                    </Button>
-                  </div>
                 </div>
               </CardTitle>
             </CardHeader>
@@ -80,7 +56,9 @@ export default async function Admin() {
                       <TableHead className="font-bold">Comment</TableHead>
                       <TableHead className="font-bold">บทความต้นทาง</TableHead>
                       <TableHead className="font-bold">สถานะ</TableHead>
-                      <TableHead className="font-bold">Action</TableHead>
+                      <TableHead className="font-bold text-center ">
+                        Action
+                      </TableHead>
                     </TableRow>
                   </TableHeader>
 
@@ -114,8 +92,8 @@ export default async function Admin() {
                           </span>
                         </TableCell>
 
-                        <TableCell>
-                          <div className="flex flex-col gap-2">
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center">
                             <CommentAction
                               id={comment.id}
                               status={comment.status}

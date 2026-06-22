@@ -110,8 +110,17 @@ export default function Page() {
 
                   <div className="flex justify-between items-center pt-2">
                     <span className="text-xs text-gray-500">
-                      {blog.published_at
+                      {blog?.published_at
                         ? new Date(blog.published_at).toLocaleDateString(
+                            'th-TH',
+                            {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            },
+                          )
+                        : blog?.created_at
+                        ? new Date(blog.created_at).toLocaleDateString(
                             'th-TH',
                             {
                               year: 'numeric',
