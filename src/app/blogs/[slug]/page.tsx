@@ -2,6 +2,7 @@ import { prisma } from 'prisma';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import CommentForm from './CommentForm';
+import { Suspense } from 'react';
 
 type Props = {
   params: Promise<{

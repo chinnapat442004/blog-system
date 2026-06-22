@@ -101,14 +101,11 @@ export default function AdminCreate() {
         throw new Error(data.message);
       }
 
-      alert('สร้างบทความสำเร็จ');
-
       clearFormData();
 
       router.push('/admin');
     } catch (error) {
       console.error(error);
-      alert('เกิดข้อผิดพลาด');
     } finally {
       setLoading(false);
     }

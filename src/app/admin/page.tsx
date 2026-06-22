@@ -31,8 +31,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import Image from 'next/image';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Admin() {
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [pagination, setPagenation] = useState<Pagination>();
   const [inputValue, setInputValue] = useState('');
@@ -43,20 +46,24 @@ export default function Admin() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
+      setIsLoading(true);
+
       try {
         const response = await axios.get('/api/admin/blogs', {
           params: { page, search },
         });
+
         setBlogs(response.data.data);
         setPagenation(response.data.pagination);
       } catch (error) {
         console.error('Failed to fetch blogs', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchBlogs();
   }, [page, search]);
-
   const previousPage = () => {
     setPage((p) => Math.max(p - 1, 1));
   };
@@ -69,6 +76,8 @@ export default function Admin() {
     blogId: number,
     currentStatus: boolean,
   ) => {
+    setIsSubmitting(true);
+
     try {
       const response = await axios.patch(`/api/admin/blogs/${blogId}/publish`, {
         is_published: !currentStatus,
@@ -83,17 +92,24 @@ export default function Admin() {
       );
     } catch (error) {
       console.error('Failed to toggle publish', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const deleteBlog = async () => {
+    setIsSubmitting(true);
+
     try {
       await axios.delete(`/api/admin/blogs/${id}`);
+
       setBlogs((prev) => prev.filter((blog) => blog.id !== id));
       setId(0);
       setIsDeleteDialogOpen(false);
     } catch (error) {
       console.error('Failed to delete', error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -288,6 +304,12 @@ export default function Admin() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {(isLoading || isSubmitting) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <Spinner className="size-12 text-[#1E293B]" />
+        </div>
+      )}
     </>
   );
 }

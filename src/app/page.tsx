@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Page() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -16,10 +17,12 @@ export default function Page() {
   const [inputValue, setInputValue] = useState('');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
+        setIsLoading(true);
         const response = await axios.get('/api/blogs', {
           params: { page, search },
         });
@@ -27,6 +30,8 @@ export default function Page() {
         setPagenation(response.data.pagination);
       } catch (error) {
         console.error('Failed to fetch blogs', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -141,6 +146,12 @@ export default function Page() {
           </button>
         </div>
       </main>
+
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <Spinner className="size-12 text-[#1E293B]" />
+        </div>
+      )}
     </>
   );
 }

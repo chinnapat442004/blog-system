@@ -49,6 +49,7 @@ export default function AdminEdit() {
 
   useEffect(() => {
     const fetchBlog = async () => {
+      setLoading(true);
       try {
         const res = await axios.get(`/api/admin/blogs/${id}`);
 
@@ -77,6 +78,7 @@ export default function AdminEdit() {
       } catch (err) {
         console.error('fetch blog failed', err);
       } finally {
+        setLoading(false);
       }
     };
 
@@ -148,14 +150,11 @@ export default function AdminEdit() {
         throw new Error(data.message);
       }
 
-      alert('สร้างบทความสำเร็จ');
-
       clearFormData();
 
       router.push('/admin');
     } catch (error) {
       console.error(error);
-      alert('เกิดข้อผิดพลาด');
     } finally {
       setLoading(false);
     }
@@ -370,7 +369,7 @@ export default function AdminEdit() {
 
         {loading && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-            <Spinner className="size-12" />
+            <Spinner className="size-12 text-[#1E293B]" />
           </div>
         )}
       </main>
