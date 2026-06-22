@@ -42,7 +42,7 @@ export default function Page() {
 
   return (
     <>
-      <main className="p-4">
+      <main className="p-4 ">
         <div className="p-5 flex items-center justify-between gap-3 my-3">
           <h1 className="text-xl font-semibold">Blog</h1>
 
@@ -75,7 +75,7 @@ export default function Page() {
             <Link key={blog.id} href={`/blogs/${blog.slug}`}>
               <Card
                 key={blog.id}
-                className="overflow-hidden cursor-pointer transition duration-200 hover:shadow-md hover:-translate-y-1 "
+                className="overflow-hidden cursor-pointer transition duration-200 hover:shadow-md hover:-translate-y-1 p-0"
               >
                 <div className="relative h-40 w-full">
                   <Image
@@ -114,7 +114,7 @@ export default function Page() {
                     </span>
                   </div>
                 </div>
-              </Card>{' '}
+              </Card>
             </Link>
           ))}
         </div>

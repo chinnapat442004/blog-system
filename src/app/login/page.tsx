@@ -31,7 +31,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState('');
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
+    <div className="flex min-h-screen items-center justify-center bg-[#f8fafc] px-4">
       <Card className="w-full max-w-sm shadow-lg rounded-sm">
         <CardHeader className="text-center space-y-1">
           <CardTitle className="text-xl">Admin Login</CardTitle>
